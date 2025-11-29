@@ -1,0 +1,44 @@
+{
+    "name": "Meeting Scribe",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "meetings",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.body.audioUrl }}"
+            },
+            "name": "Whisper Transcription",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Whisper Transcription",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}
