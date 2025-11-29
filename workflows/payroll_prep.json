@@ -1,0 +1,45 @@
+{
+    "name": "Payroll Prep",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "payroll",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT * FROM timesheets WHERE month = '{{ $json.body.month }}'"
+            },
+            "name": "Postgres",
+            "type": "n8n-nodes-base.postgres",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Postgres",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

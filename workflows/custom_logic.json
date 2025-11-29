@@ -1,0 +1,44 @@
+{
+    "name": "Custom Workflow Logic",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "custom",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "return $input.all().map(item => { item.json.processed = true; return item; });"
+            },
+            "name": "Code",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Code",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

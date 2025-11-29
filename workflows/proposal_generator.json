@@ -1,0 +1,45 @@
+{
+    "name": "Proposal Generator",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "proposal",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4",
+                "prompt": "Write a proposal for {{ $json.body.clientName }} based on: {{ $json.body.requirements }}"
+            },
+            "name": "AI Writer",
+            "type": "n8n-nodes-base.openAi",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "AI Writer",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

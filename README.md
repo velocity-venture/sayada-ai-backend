@@ -107,3 +107,61 @@ curl -X POST http://localhost:3000/api/leads/qualify \
   -H "Content-Type: application/json" \
   -d '{"leadData": {"name": "Lead", "score": 80}}'
 ```
+
+## Tier 3 Automations - Curl Examples
+
+### 13. Competitor Watch
+```bash
+curl -X POST http://localhost:3000/api/strategy/competitor-watch \
+  -H "Content-Type: application/json" \
+  -d '{"competitorUrl": "https://competitor.com"}'
+```
+
+### 14. Sentiment Analysis
+```bash
+curl -X POST http://localhost:3000/api/strategy/sentiment \
+  -H "Content-Type: application/json" \
+  -d '{"text": "I love this product!"}'
+```
+
+### 15. Dynamic Reporting (PDF)
+```bash
+curl -X POST http://localhost:3000/api/reporting/generate \
+  -H "Content-Type: application/json" \
+  -d '{"reportId": "monthly-2023-10"}' --output report.pdf
+```
+
+### 16. CRM Data Hygiene
+```bash
+curl -X POST http://localhost:3000/api/crm/clean \
+  -H "Content-Type: application/json" \
+  -d '{"address": "123 main st, ny"}'
+```
+
+### 17. Proposal Generator
+```bash
+curl -X POST http://localhost:3000/api/sales/proposal \
+  -H "Content-Type: application/json" \
+  -d '{"clientName": "Acme Corp", "requirements": "AI Automation"}'
+```
+
+### 18. Payroll Prep
+```bash
+curl -X POST http://localhost:3000/api/hr/payroll \
+  -H "Content-Type: application/json" \
+  -d '{"month": "2023-10"}'
+```
+
+### 19. Legal/Compliance Check
+```bash
+curl -X POST http://localhost:3000/api/legal/check \
+  -H "Content-Type: application/json" \
+  -d '{"contractText": "Terms and conditions..."}'
+```
+
+### 20. Custom Workflow Logic
+```bash
+curl -X POST http://localhost:3000/api/workflows/custom \
+  -H "Content-Type: application/json" \
+  -d '{"data": [{"id": 1}]}'
+```

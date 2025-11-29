@@ -1,0 +1,51 @@
+{
+    "name": "Dynamic Reporting",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "reporting",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "values": {
+                    "string": [
+                        {
+                            "name": "html",
+                            "value": "<h1>Monthly Report</h1><p>Data: {{ $json.body.data }}</p>"
+                        }
+                    ]
+                }
+            },
+            "name": "Set HTML",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Set HTML",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}
