@@ -1,0 +1,48 @@
+{
+    "name": "Invoice Chasing",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "invoices",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "resource": "invoice",
+                "operation": "getAll",
+                "filter": {
+                    "status": "overdue"
+                }
+            },
+            "name": "Xero",
+            "type": "n8n-nodes-base.xero",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Xero",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

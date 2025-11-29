@@ -8,8 +8,11 @@ const inboxRoutes: FastifyPluginAsync = async (fastify) => {
             // Forward payload to n8n webhook
             const response = await axios.post(`${env.N8N_WEBHOOK_BASE_URL}/inbox`, request.body);
             return reply.send(response.data);
-        } catch (error) {
-            fastify.log.error(error);
+        } catch (error: any) {
+            fastify.log.error(`Error calling n8n: ${error.message}`);
+            if (error.response) {
+                fastify.log.error(`n8n response: ${JSON.stringify(error.response.data)}`);
+            }
             return reply.status(500).send({ error: 'Failed to process inbox item' });
         }
     });

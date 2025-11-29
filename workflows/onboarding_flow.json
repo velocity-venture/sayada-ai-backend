@@ -1,0 +1,46 @@
+{
+    "name": "Onboarding Flows",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "onboarding",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "toEmail": "={{ $json.body.email }}",
+                "subject": "Welcome to Sayada.ai!",
+                "text": "Welcome aboard!"
+            },
+            "name": "Send Email",
+            "type": "n8n-nodes-base.emailSend",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Send Email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

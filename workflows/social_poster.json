@@ -1,0 +1,44 @@
+{
+    "name": "Social Media Auto-Poster",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "social",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "text": "={{ $json.body.content }}"
+            },
+            "name": "Twitter",
+            "type": "n8n-nodes-base.twitter",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Twitter",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

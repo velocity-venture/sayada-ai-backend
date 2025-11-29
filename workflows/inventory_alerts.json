@@ -1,0 +1,52 @@
+{
+    "name": "Inventory Alerts",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "inventory",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                460,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "number": [
+                        {
+                            "value1": "={{ $json.body.stockLevel }}",
+                            "operation": "smaller",
+                            "value2": 10
+                        }
+                    ]
+                }
+            },
+            "name": "Low Stock Check",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                680,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Low Stock Check",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

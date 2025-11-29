@@ -17,3 +17,4 @@ if (!_env.success) {
 }
 
 export const env = _env.data;
+console.log('Loaded ENV:', { N8N_WEBHOOK_BASE_URL: env.N8N_WEBHOOK_BASE_URL });

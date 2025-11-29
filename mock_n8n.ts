@@ -8,7 +8,7 @@ server.all('*', async (request, reply) => {
     return { status: 'Workflow started', executionId: 'mock-exec-123' };
 });
 
-server.listen({ port: 5678 }, (err, address) => {
+server.listen({ port: 5678, host: '0.0.0.0' }, (err, address) => {
     if (err) {
         console.error(err);
         process.exit(1);
