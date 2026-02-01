@@ -3,8 +3,8 @@ import puppeteer from 'puppeteer';
 export class PDFService {
     static async generatePDF(html: string): Promise<Buffer> {
         const browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for some environments
+            headless: true,  // Uses modern "new" headless mode in v22+
+            args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for Render/container envs
         });
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: 'networkidle0' });

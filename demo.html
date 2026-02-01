@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayada.ai Backend Demo</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; padding: 2rem; background: #f0f2f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #1a1a1a; }
+        .card { border: 1px solid #e1e4e8; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+        button { background: #0066ff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0052cc; }
+        pre { background: #f6f8fa; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sayada.ai Backend Demo (v1.0.0)</h1>
+        
+        <div class="card">
+            <h3>1. Smart Inbox Management</h3>
+            <p>POST /api/inbox/process</p>
+            <button onclick="testInbox()">Run Simulation</button>
+            <pre id="inbox-result">Waiting...</pre>
+        </div>
+
+        <div class="card">
+            <h3>15. Dynamic Reporting (PDF)</h3>
+            <p>POST /api/reporting/generate</p>
+            <button onclick="testReporting()">Generate PDF</button>
+            <pre id="reporting-result">Waiting...</pre>
+        </div>
+
+        <div class="card">
+            <h3>20. Custom Workflow Logic</h3>
+            <p>POST /api/workflows/custom</p>
+            <button onclick="testCustom()">Execute Logic</button>
+            <pre id="custom-result">Waiting...</pre>
+        </div>
+    </div>
+
+    <script>
+        async function testInbox() {
+            document.getElementById('inbox-result').innerText = 'Processing...';
+            try {
+                const res = await fetch('http://localhost:3000/api/inbox/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject: 'Demo Email', content: 'Testing the system', from: 'demo@sayada.ai' })
+                });
+                const data = await res.json();
+                document.getElementById('inbox-result').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('inbox-result').innerText = 'Error: ' + err.message;
+            }
+        }
+
+        async function testReporting() {
+            document.getElementById('reporting-result').innerText = 'Generating PDF...';
+            try {
+                const res = await fetch('http://localhost:3000/api/reporting/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reportId: 'demo-report' })
+                });
+                if (res.ok) {
+                    document.getElementById('reporting-result').innerText = '✅ PDF Generated (Binary Blob received)';
+                } else {
+                    const data = await res.json();
+                    document.getElementById('reporting-result').innerText = 'Error: ' + JSON.stringify(data);
+                }
+            } catch (err) {
+                document.getElementById('reporting-result').innerText = 'Error: ' + err.message;
+            }
+        }
+
+        async function testCustom() {
+            document.getElementById('custom-result').innerText = 'Executing...';
+            try {
+                const res = await fetch('http://localhost:3000/api/workflows/custom', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: [{ id: 1, value: 'test' }] })
+                });
+                const data = await res.json();
+                document.getElementById('custom-result').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('custom-result').innerText = 'Error: ' + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
