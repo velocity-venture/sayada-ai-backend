@@ -1,17 +1,19 @@
 import { FastifyPluginAsync } from 'fastify';
-import axios from 'axios';
-import { env } from '../config/env';
+import { callN8n } from '../lib/n8n';
 
 const meetingRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.post('/transcribe', async (request, reply) => {
-        try {
-            const response = await axios.post(`${env.N8N_WEBHOOK_BASE_URL}/meetings`, request.body);
-            return reply.send(response.data);
-        } catch (error) {
-            fastify.log.error(error);
-            return reply.status(500).send({ error: 'Failed to transcribe meeting' });
-        }
-    });
+  fastify.post('/transcribe', async (request, reply) => {
+    try {
+      const data = await callN8n({
+        webhook: 'meetings',
+        payload: request.body,
+        logger: fastify.log,
+      });
+      return reply.send(data);
+    } catch (error) {
+      return reply.status(500).send(error);
+    }
+  });
 };
 
 export default meetingRoutes;

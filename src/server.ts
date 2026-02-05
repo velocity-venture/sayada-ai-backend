@@ -1,6 +1,11 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import { env } from './config/env';
+import { authenticateApiKey } from './middleware/auth';
+import { PDFService } from './services/pdf';
+
+// Route imports
 import inboxRoutes from './routes/inbox';
 import calendarRoutes from './routes/calendar';
 import meetingRoutes from './routes/meetings';
@@ -21,15 +26,36 @@ import legalRoutes from './routes/legal';
 import workflowRoutes from './routes/workflows';
 
 const server = Fastify({
-    logger: {
-        transport: {
-            target: 'pino-pretty',
-        },
+  logger: {
+    transport: {
+      target: 'pino-pretty',
     },
+  },
+  bodyLimit: 1_048_576, // 1 MB
+  requestTimeout: 60_000,
 });
 
+// CORS — restrict origins in production
+const allowedOrigins = env.ALLOWED_ORIGINS
+  ? env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+  : ['http://localhost:3000'];
+
 server.register(cors, {
-    origin: '*', // Adjust for production
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+});
+
+// Rate limiting — 60 requests per minute per IP
+server.register(rateLimit, {
+  max: 60,
+  timeWindow: '1 minute',
+});
+
+// API key auth on all /api/* routes
+server.addHook('onRequest', async (request, reply) => {
+  if (request.url.startsWith('/api/')) {
+    await authenticateApiKey(request, reply);
+  }
 });
 
 // Register Routes
@@ -52,18 +78,34 @@ server.register(hrRoutes, { prefix: '/api/hr' });
 server.register(legalRoutes, { prefix: '/api/legal' });
 server.register(workflowRoutes, { prefix: '/api/workflows' });
 
+// Health check (no auth required)
 server.get('/health', async () => {
-    return { status: 'ok', timestamp: new Date().toISOString() };
+  return {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+  };
 });
 
+// Graceful shutdown
+const shutdown = async (signal: string) => {
+  server.log.info(`Received ${signal}, shutting down...`);
+  await server.close();
+  await PDFService.close();
+  process.exit(0);
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
 const start = async () => {
-    try {
-        await server.listen({ port: parseInt(env.PORT), host: '0.0.0.0' });
-        console.log(`🚀 Server running at http://localhost:${env.PORT}`);
-    } catch (err) {
-        server.log.error(err);
-        process.exit(1);
-    }
+  try {
+    await server.listen({ port: parseInt(env.PORT), host: '0.0.0.0' });
+    server.log.info(`Server running at http://localhost:${env.PORT}`);
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
 };
 
 start();

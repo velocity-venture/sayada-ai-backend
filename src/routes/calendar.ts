@@ -1,17 +1,19 @@
 import { FastifyPluginAsync } from 'fastify';
-import axios from 'axios';
-import { env } from '../config/env';
+import { callN8n } from '../lib/n8n';
 
 const calendarRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.post('/optimize', async (request, reply) => {
-        try {
-            const response = await axios.post(`${env.N8N_WEBHOOK_BASE_URL}/calendar`, request.body);
-            return reply.send(response.data);
-        } catch (error) {
-            fastify.log.error(error);
-            return reply.status(500).send({ error: 'Failed to optimize calendar' });
-        }
-    });
+  fastify.post('/optimize', async (request, reply) => {
+    try {
+      const data = await callN8n({
+        webhook: 'calendar',
+        payload: request.body,
+        logger: fastify.log,
+      });
+      return reply.send(data);
+    } catch (error) {
+      return reply.status(500).send(error);
+    }
+  });
 };
 
 export default calendarRoutes;

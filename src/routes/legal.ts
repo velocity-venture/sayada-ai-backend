@@ -1,17 +1,19 @@
 import { FastifyPluginAsync } from 'fastify';
-import axios from 'axios';
-import { env } from '../config/env';
+import { callN8n } from '../lib/n8n';
 
 const legalRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.post('/check', async (request, reply) => {
-        try {
-            const response = await axios.post(`${env.N8N_WEBHOOK_BASE_URL}/legal`, request.body);
-            return reply.send(response.data);
-        } catch (error) {
-            fastify.log.error(error);
-            return reply.status(500).send({ error: 'Failed to check compliance' });
-        }
-    });
+  fastify.post('/check', async (request, reply) => {
+    try {
+      const data = await callN8n({
+        webhook: 'legal',
+        payload: request.body,
+        logger: fastify.log,
+      });
+      return reply.send(data);
+    } catch (error) {
+      return reply.status(500).send(error);
+    }
+  });
 };
 
 export default legalRoutes;

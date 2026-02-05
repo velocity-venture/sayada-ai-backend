@@ -1,17 +1,19 @@
 import { FastifyPluginAsync } from 'fastify';
-import axios from 'axios';
-import { env } from '../config/env';
+import { callN8n } from '../lib/n8n';
 
 const callRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.post('/missed', async (request, reply) => {
-        try {
-            const response = await axios.post(`${env.N8N_WEBHOOK_BASE_URL}/calls`, request.body);
-            return reply.send(response.data);
-        } catch (error) {
-            fastify.log.error(error);
-            return reply.status(500).send({ error: 'Failed to handle missed call' });
-        }
-    });
+  fastify.post('/missed', async (request, reply) => {
+    try {
+      const data = await callN8n({
+        webhook: 'calls',
+        payload: request.body,
+        logger: fastify.log,
+      });
+      return reply.send(data);
+    } catch (error) {
+      return reply.status(500).send(error);
+    }
+  });
 };
 
 export default callRoutes;
