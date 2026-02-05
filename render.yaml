@@ -5,10 +5,15 @@ services:
     plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_VERSION
         value: 20.9.0
+      - key: NODE_ENV
+        value: production
       - key: N8N_WEBHOOK_BASE_URL
-        sync: false # User must provide this in dashboard
+        sync: false
       - key: API_KEY
         generateValue: true
+      - key: ALLOWED_ORIGINS
+        sync: false
