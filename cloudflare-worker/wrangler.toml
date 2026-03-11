@@ -1,0 +1,42 @@
+name = "sayada-ai"
+main = "src/index.ts"
+compatibility_date = "2024-02-01"
+
+# Worker configuration
+[env.production]
+name = "sayada-ai"
+routes = [
+  { pattern = "api.sayada.ai/*", zone_name = "sayada.ai" }
+]
+
+[env.staging]  
+name = "sayada-ai-staging"
+
+# Environment variables (set via wrangler secret put)
+[vars]
+NODE_ENV = "production"
+
+# Secrets to be set via CLI:
+# wrangler secret put N8N_WEBHOOK_BASE_URL
+# wrangler secret put API_KEY
+# wrangler secret put ALLOWED_ORIGINS
+
+# KV storage for caching (optional)
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# D1 database for analytics/logging (optional)  
+[[d1_databases]]
+binding = "DB"
+database_name = "sayada-analytics"
+database_id = "your-d1-database-id"
+
+# Rate limiting and resource limits
+[build]
+command = ""
+
+# TypeScript configuration
+[tsconfig]
+compilerOptions = { lib = ["ES2022"] }

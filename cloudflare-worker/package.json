@@ -1,0 +1,28 @@
+{
+  "name": "sayada-ai-worker",
+  "version": "1.0.0",
+  "description": "Sayada.ai Backend - Cloudflare Workers",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --name sayada-ai-staging",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
+  },
+  "keywords": ["ai", "automation", "cloudflare", "workers"],
+  "author": "Velocity Venture Holdings",
+  "license": "ISC",
+  "dependencies": {
+    "itty-router": "^5.0.16"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.78.12"
+  }
+}
